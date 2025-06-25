@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SI Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        overflow-x: hidden;
+      }
+      #sidebarMenu {
+        min-width: 250px;
+      }
+      .content-section {
+        display: none;
+      }
+      .content-section.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Sidebar layout -->
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <nav
+          id="sidebarMenu"
+          class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse show"
+        >
+          <div class="position-sticky pt-3">
+            <ul class="nav flex-column px-3">
+              <li class="nav-item">
+                <a class="nav-link active" href="#" data-section="home">
+                  🏠 Home
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-section="instruments">
+                  📊 Instruments
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <!-- Page Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-3">
+          <!-- Toggle button -->
+          <button
+            class="btn btn-outline-secondary d-md-none mb-3"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu"
+          >
+            ☰ Menu
+          </button>
+
+          <!-- Calculator Section -->
+          <section id="home" class="content-section active">
+            {% include 'frontend_ui/calculator_form.html' %}
+          </section>
+
+          <!-- Instruments Section -->
+          <section id="instruments" class="content-section">
+            {% include 'frontend_ui/instruments.html' %}
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!--Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Sidebar Navigation Script -->
+    <script>
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          // Remove active class from all links
+          document
+            .querySelectorAll(".nav-link")
+            .forEach((l) => l.classList.remove("active"));
+
+          // Add active class to clicked link
+          this.classList.add("active");
+
+          // Hide all sections
+          document
+            .querySelectorAll(".content-section")
+            .forEach((s) => s.classList.remove("active"));
+
+          // Show selected section
+          const targetId = this.getAttribute("data-section");
+          document.getElementById(targetId).classList.add("active");
+        });
+      });
+    </script>
+
+  </body>
+</html>

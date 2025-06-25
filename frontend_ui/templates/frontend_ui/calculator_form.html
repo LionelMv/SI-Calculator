@@ -1,0 +1,117 @@
+<div class="container mt-5">
+  <div class="card shadow-sm rounded">
+    <div class="card-body">
+      <h3 class="card-title text-center mb-4">
+        Synthetic Index Lot Size & Risk Calculator
+      </h3>
+
+      <form id="calcForm">
+        <div class="mb-3">
+          <label for="instrument" class="form-label">Instrument</label>
+          <select
+            class="form-select"
+            name="instrument"
+            id="instrument"
+            required
+          >
+            <option value="">Select one</option>
+            {% for key, label in instruments %}
+            <option value="{{ key }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Account Balance</label>
+          <input
+            type="number"
+            name="account_balance"
+            class="form-control"
+            step="0.01"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Entry Price</label>
+          <input
+            type="number"
+            name="entry_price"
+            class="form-control"
+            step="0.0001"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Stop Price</label>
+          <input
+            type="number"
+            name="stop_price"
+            class="form-control"
+            step="0.0001"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Risk Percent (%)</label>
+          <input
+            type="number"
+            name="risk_percent"
+            class="form-control"
+            step="0.01"
+            required
+          />
+        </div>
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">Calculate</button>
+        </div>
+      </form>
+
+      <div class="alert alert-success mt-4 d-none" id="result">
+        <h5>Calculation Result</h5>
+        <p><strong>Lot Size:</strong> <span id="lot"></span></p>
+        <p><strong>Pips:</strong> <span id="pips"></span></p>
+        <p><strong>Risk Amount:</strong> $<span id="risk"></span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Form submission-->
+<script>
+  const form = document.getElementById("calcForm");
+  const resultDiv = document.getElementById("result");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch("/api/calculate/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        document.getElementById("lot").textContent = result.lot;
+        document.getElementById("pips").textContent = result.pips;
+        document.getElementById("risk").textContent = result.risk;
+        resultDiv.classList.remove("d-none");
+      } else {
+        alert("Error: " + JSON.stringify(result));
+      }
+    } catch (err) {
+      alert("Something went wrong.");
+    }
+  });
+</script>

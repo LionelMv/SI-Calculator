@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import CalculatorInputSerializer
+from .constants import INSTRUMENTS, CHOICES
 from .utils import calculate_lot_risk
 
 
@@ -26,3 +27,13 @@ class CalculateView(APIView):
             }, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class InstrumentListView(APIView):
+    def get(self, request):
+        data = [
+            {"code": code, "name": name, "min_lot": INSTRUMENTS.get(code)}
+            for code, name in CHOICES
+        ]
+
+        return Response(data, status=status.HTTP_200_OK)
