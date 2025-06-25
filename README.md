@@ -13,8 +13,6 @@ This is a risk calculator for Deriv's Synthetic Indices. It calculates the lot s
 
 [Deriv](https://deriv.com/) is an online broker that offers CFDs and other derivatives on forex, stocks & indices, cryptocurrencies, commodities, and derived to millions of registered users across the globe.
 
-This project also includes an API for the calculator. The documentation is in the file ```./SI_RC/api.md```.
-
 ## 🛠 Setup & Installation
 
 1. Clone the repository locally
