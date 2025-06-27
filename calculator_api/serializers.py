@@ -10,8 +10,5 @@ class CalculatorInputSerializer(serializers.Serializer):
     risk_percent = serializers.FloatField(min_value=0.01, max_value=100)
 
     def validate(self, data):
-        instrument = data['instrument']
-        if instrument not in INSTRUMENTS:
-            raise serializers.ValidationError("Unknown instrument.")
-        data['lowest_lot'] = INSTRUMENTS[instrument]
+        data['lowest_lot'] = INSTRUMENTS[data['instrument']]
         return data
