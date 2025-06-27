@@ -9,6 +9,8 @@ class CalculatorInputSerializer(serializers.Serializer):
     stop_price = serializers.FloatField(min_value=0.0001)
     risk_percent = serializers.FloatField(min_value=0.01, max_value=100)
 
+    lowest_lot = serializers.FloatField(read_only=True)
+
     def validate(self, data):
         data['lowest_lot'] = INSTRUMENTS[data['instrument']]
         return data

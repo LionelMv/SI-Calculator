@@ -23,7 +23,8 @@ class CalculateView(APIView):
             return Response({
                 'lot': float(lot),
                 'pips': float(pips),
-                'risk': float(total_risk)
+                'risk': float(total_risk),
+                'lowest_lot': serializer.validated_data['lowest_lot']
             }, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
