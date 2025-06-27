@@ -53,6 +53,11 @@ This is a risk calculator for Deriv's Synthetic Indices. It calculates the lot s
 
     The application should be available at ```http://localhost:8000/``` through your browser.
 
+6. To run tests
+    ```bash
+    pytest
+    ```
+
 ## 🌐 API Endpoints
 **Base URL:** `https://base_url/api/`
 | Endpoint | Method | Description |
@@ -72,15 +77,20 @@ While it looked easy on paper to implement, each instrument having different min
 
 ## 🤝 Contribution Guide
 
-1. **Fork/Clone the repository**
-2. **Create a new branch:** `git checkout -b feature-branch`
-3. **Commit changes with conventional commit messages:**
+1. Fork/Clone the repository.
+2. Create a new branch: `git checkout -b feature-branch`
+3. Implement your changes with clean, efficient code.
+4. Write or update tests:
+    
+    - All test files should be placed inside the tests/ directory at the root of every app.
+    - Test files should follow the `test_*.py` pattern (e.g., `test_models.py`, `test_views.py`). Test functions should also follow the `test_` prefix convention, 
+5. Commit changes with conventional commit messages:
   
     ```sh
     git commit -m "feat: add user profile page"
     ```
   
-4. **Push changes & create a pull request:**
+6. Push changes & create a pull request:
   
     ```sh
     git push origin feature-branch

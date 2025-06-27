@@ -108,10 +108,13 @@
         document.getElementById("risk").textContent = result.risk;
         resultDiv.classList.remove("d-none");
       } else {
-        alert("Error: " + JSON.stringify(result));
+        const messages = Object.entries(result)
+          .map(([key, value]) => `${key}: ${value.join(", ")}`)
+          .join("\n");
+        showToast("Error: \n" + messages, "danger");
       }
     } catch (err) {
-      alert("Something went wrong.");
+      alert("Something went wrong. Please try again.");
     }
   });
 </script>

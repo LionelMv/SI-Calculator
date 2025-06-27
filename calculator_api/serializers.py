@@ -12,5 +12,10 @@ class CalculatorInputSerializer(serializers.Serializer):
     lowest_lot = serializers.FloatField(read_only=True)
 
     def validate(self, data):
+        if data['entry_price'] == data['stop_price']:
+            raise serializers.ValidationError({
+                "stop_price": "Stop price must be different from entry price."
+            })
+
         data['lowest_lot'] = INSTRUMENTS[data['instrument']]
         return data
