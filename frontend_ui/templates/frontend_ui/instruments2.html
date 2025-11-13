@@ -1,54 +1,23 @@
-<!--This uses the api endpoint to load the instruments-->
-
 <div class="container mt-5">
   <div class="card shadow-sm">
     <div class="card-body">
       <h4>Instruments & Minimum Lot Sizes</h4>
-      <!-- Instruments Table -->
-      <table class="table table-striped mt-3" id="instrumentTable">
+      <table class="table table-striped mt-3">
         <thead>
           <tr>
             <th>Instrument</th>
             <th>Minimum Lot</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+          {% for key, value in instruments_map.items %}
+          <tr>
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
     </div>
   </div>
 </div>
-
-<script>
-    async function loadInstruments() {
-        try {
-            const response = await fetch('/api/instruments/');
-            const instruments = await response.json();
-
-            const dropdown = document.getElementById('instrument');
-            const tableBody = document.querySelector('#instrumentTable tbody');
-
-            // Clear current options
-            dropdown.innerHTML = '<option value="">Select one</option>';
-            tableBody.innerHTML = '';
-
-            instruments.forEach(inst => {
-                // Add to dropdown
-                const opt = document.createElement('option');
-                opt.value = inst.code;
-                opt.textContent = inst.name;
-                dropdown.appendChild(opt);
-
-                // Add to table
-                const row = document.createElement('tr');
-                row.innerHTML = `<td>${inst.name}</td><td>${inst.min_lot}</td>`;
-                tableBody.appendChild(row);
-            });
-        } catch (err) {
-            console.error('Failed to load instruments:', err);
-            alert('Could not load instruments. Try refreshing the page.');
-        }
-    }
-
-    // Load instruments after page loads
-    document.addEventListener('DOMContentLoaded', loadInstruments);
-</script>
