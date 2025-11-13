@@ -1,16 +1,24 @@
+from dataclasses import dataclass
 from decimal import Decimal
 
 
-def calculate_lot_risk(account_balance, entry_price, stop_price,
-                       risk_percent, lowest_allowable_lot):
-    # Calculate pip difference
-    num_pips = abs(Decimal(str(entry_price)) - Decimal(str(stop_price)))
+@dataclass
+class CalculatorContext:
+    account_balance: Decimal
+    entry_price: Decimal
+    stop_price: Decimal
+    risk_percent: Decimal
+    lowest_allowable_lot: Decimal
 
-    risk_allowed_amount = \
-        Decimal(str(account_balance)) * (Decimal(str(risk_percent)) / 100)
+
+def calculate_lot_risk(context: CalculatorContext) -> tuple[Decimal, Decimal, Decimal]:
+    # Calculate pip difference
+    num_pips = abs(context.entry_price - context.stop_price)
+
+    risk_allowed_amount = context.account_balance * (context.risk_percent / 100)
     lot = risk_allowed_amount / num_pips
 
-    lowest_allowable_lot = Decimal(str(lowest_allowable_lot))
+    lowest_allowable_lot = Decimal(str(context.lowest_allowable_lot))
     if lot <= lowest_allowable_lot:
         lot = lowest_allowable_lot
         total_risk = num_pips * lowest_allowable_lot

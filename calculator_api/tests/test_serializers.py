@@ -1,52 +1,70 @@
 import pytest
+from typing import Any, Dict
+from decimal import Decimal
 from calculator_api.serializers import CalculatorInputSerializer
 
 
-# Parametrized valid cases
-@pytest.mark.parametrize("data,expected_lot", [
-    (
-        {
-            "instrument": "v75",
-            "account_balance": 1000.0,
-            "entry_price": 500.0,
-            "stop_price": 490.0,
-            "risk_percent": 2
-        },
-        0.001
-    ),
-    (
-        {
-            "instrument": "v50",
-            "account_balance": 2000,
-            "entry_price": 1200,
-            "stop_price": 1190,
-            "risk_percent": 1
-        },
-        4
-    )
-])
-def test_valid_inputs(data, expected_lot):
+# ----------------------------
+# Valid input test cases
+# ----------------------------
+@pytest.mark.parametrize(
+    "data,expected_lot",
+    [
+        (
+            {
+                "instrument": "v75",
+                "account_balance": 1000.0,
+                "entry_price": 500.0,
+                "stop_price": 490.0,
+                "risk_percent": 2,
+            },
+            0.001,
+        ),
+        (
+            {
+                "instrument": "v50",
+                "account_balance": 2000,
+                "entry_price": 1200,
+                "stop_price": 1190,
+                "risk_percent": 1,
+            },
+            4,
+        ),
+    ],
+)
+def test_valid_inputs(data: Dict[str, Any], expected_lot: float) -> None:
+    """
+    Valid input serializer should be valid and populate lowest_lot correctly.
+    """
     serializer = CalculatorInputSerializer(data=data)
     assert serializer.is_valid()
-    assert serializer.validated_data["lowest_lot"] == expected_lot
+    assert serializer.validated_data["lowest_lot"] == Decimal(str(expected_lot))
 
 
-# Parametrized invalid numeric values
-@pytest.mark.parametrize("field,value", [
-    ("account_balance", -100),
-    ("account_balance", 0),
-    ("entry_price", 0),
-    ("stop_price", 0),
-    ("risk_percent", 0),
-    ("risk_percent", 150),
-])
-def test_numeric_validation_errors(field, value):
-    data = {
+# ----------------------------
+# Numeric validation error tests
+# ----------------------------
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("account_balance", -100),
+        ("account_balance", 0),
+        ("entry_price", 0),
+        ("stop_price", 0),
+        ("risk_percent", 0),
+        ("risk_percent", 150),
+    ],
+)
+def test_numeric_validation_errors(field: str, value: float) -> None:
+    """
+    Ensure numeric constraints are enforced by the serializer.
+    """
+    data: Dict[str, Any] = {
         "instrument": "v75",
         "account_balance": 1000,
         "entry_price": 500,
         "stop_price": 490,
-        "risk_percent": 1
+        "risk_percent": 1,
     }
     data[field] = value
 
@@ -55,20 +73,29 @@ def test_numeric_validation_errors(field, value):
     assert field in serializer.errors
 
 
-# Invalid instrument check (one or more cases)
-@pytest.mark.parametrize("instrument", ["", "invalid_code", "BTCUSD"])
-def test_invalid_instrument_fails(instrument):
-    data = {
+# ----------------------------
+# Invalid instrument tests
+# ----------------------------
+@pytest.mark.parametrize(
+    "instrument", ["", "invalid_code", "BTCUSD"]
+)
+def test_invalid_instrument_fails(instrument: str) -> None:
+    """
+    Ensure invalid instrument codes fail serializer validation.
+    """
+    data: Dict[str, Any] = {
         "instrument": instrument,
         "account_balance": 1000,
         "entry_price": 500,
         "stop_price": 490,
-        "risk_percent": 1
+        "risk_percent": 1,
     }
+
     serializer = CalculatorInputSerializer(data=data)
     assert not serializer.is_valid()
-    # Could be either field error or validation error
+    # Could be either a field-specific error or a general validation error
     assert "instrument" in serializer.errors or "__all__" in serializer.errors
+
 
 
 '''

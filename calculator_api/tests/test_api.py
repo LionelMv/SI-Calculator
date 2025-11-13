@@ -1,8 +1,9 @@
 import pytest
+from typing import Dict, Set, Any
 from rest_framework.test import APIClient
 from django.urls import reverse
 
-client = APIClient()
+client: APIClient = APIClient()
 
 
 @pytest.mark.parametrize("payload,expected_status,expected_fields", [
@@ -71,21 +72,25 @@ client = APIClient()
         {"stop_price"}
     )
 ])
-def test_calculate_parametrized(payload, expected_status, expected_fields):
+def test_calculate_parametrized(
+    payload: Dict[str, Any],
+    expected_status: int,
+    expected_fields: Set[str],
+) -> None:
     url = reverse('calculate')
     response = client.post(url, payload, format='json')
 
     assert response.status_code == expected_status
 
     if expected_status == 200:
-        # Make sure all expected fields are in the response
+        # Ensure all expected fields exist
         assert all(field in response.data for field in expected_fields)
     else:
-        # Make sure at least one of the expected error fields is present
+        # Ensure at least one expected error field exists
         assert any(field in response.data for field in expected_fields)
 
 
-def test_get_instruments_list():
+def test_get_instruments_list() -> None:
     url = reverse('instruments')
     response = client.get(url)
 
