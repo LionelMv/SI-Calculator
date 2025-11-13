@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from logging.handlers import RotatingFileHandler
 
@@ -26,20 +27,28 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
+        "file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": LOG_DIR / "calculator_app.log",
+            "maxBytes": 5 * 1024 * 1024,  # 5 MB per log file
+            "backupCount": 5,  # Keep 5 backups
+            "formatter": "verbose",
+            "encoding": "utf8",
+        },
     },
 
     "loggers": {
         "": {  # Root logger (all logs)
-            "handlers": ["console"],
+            "handlers": ["console", "file"],
             "level": "INFO",
         },
         "calculator_api": {
-            "handlers": ["console"],
+            "handlers": ["console", "file"],
             "level": "INFO",
             "propagate": False,
         },
         "django": {  # Optional: reduce Django’s default verbosity
-            "handlers": ["console"],
+            "handlers": ["console", "file"],
             "level": "WARNING",
             "propagate": False,
         },
