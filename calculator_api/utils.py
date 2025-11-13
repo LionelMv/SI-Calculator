@@ -1,5 +1,8 @@
+import logging
 from dataclasses import dataclass
 from decimal import Decimal
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -22,8 +25,12 @@ def calculate_lot_risk(context: CalculatorContext) -> tuple[Decimal, Decimal, De
     if lot <= lowest_allowable_lot:
         lot = lowest_allowable_lot
         total_risk = num_pips * lowest_allowable_lot
+        logger.info(
+            f"Lot below minimum, using lowest allowable lot: {lot}, risk: {total_risk}"
+        )
     else:
         total_risk = num_pips * lot
+        logger.info(f"Lot above mininum, lot: {lot}, risk: {total_risk}")
 
     lot = lot.quantize(Decimal('0.003'))
     total_risk = total_risk.quantize(Decimal('0.02'))
