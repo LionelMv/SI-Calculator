@@ -1,7 +1,7 @@
 # Synthetic Indices Position Size Calculator
 ![alt text](image.png)
 
-## 📌 About
+## About
 
 This is a risk calculator for Deriv's Synthetic Indices. It calculates the lot size, number of pips and the total risk (USD) for a user's trade based on these parameters:
 
@@ -13,59 +13,70 @@ This is a risk calculator for Deriv's Synthetic Indices. It calculates the lot s
 
 [Deriv](https://deriv.com/) is an online broker that offers CFDs and other derivatives on forex, stocks & indices, cryptocurrencies, commodities, and derived to millions of registered users across the globe.
 
-## 🛠 Setup & Installation
+## Setup & Installation
 
 1. Clone the repository locally
 
     ```bash
     git clone https://github.com/LionelMv/SI-Calculator.git
+    cd SI-Calculator
     ```
 
-2. Setup a virtual environment using pip and venv.
+2. Install `uv`.
+
+    Follow the official installation guide for your platform:
+    <https://docs.astral.sh/uv/getting-started/installation/>
+
+    On Linux/macOS:
+
     ```bash
-    python -m venv env
+    curl -LsSf https://astral.sh/uv/install.sh | sh
     ```
 
-3. Activate the virtual environment.
-
-    On Windows:
+3. Sync the project environment.
 
     ```bash
-    .\env\Scripts\activate
+    uv sync --dev
     ```
 
-    On Linux/MacOS:
+4. Create a local environment file and set a non-empty `SECRET_KEY`.
+
     ```bash
-    source env\Scripts\activate
+    cp .envexample .env
     ```
 
-4. Setup the project environment
+    Update `.env` before running the project. At a minimum, replace:
 
-    ```bash
-    pip install -r requirements.txt
+    ```env
+    SECRET_KEY=replace-with-a-non-empty-value
     ```
 
 5. Start up server
 
     ```bash
-    python manage.py runserver
+    uv run manage.py runserver
     ```
 
     The application should be available at ```http://localhost:8000/``` through your browser.
 
 6. To run tests
     ```bash
-    pytest
+    uv run pytest
     ```
 
-## 🌐 API Endpoints
+7. To run type checks
+    ```bash
+    uv run mypy .
+    ```
+
+## API Endpoints
 **Base URL:** `https://base_url/api/`
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/calculate/` | POST | Return the lot size, pips and risk amount |
 | `/instruments/` | GET | Get all the instruments and their minimum lot size  |
 
-## 📘 The Story
+## The Story
 
 Most professional traders always manage their risk for every trade position they enter be it in stocks, forex and even other investments. Synthetic Indices' trading is not any different.
 
@@ -75,7 +86,7 @@ While it looked easy on paper to implement, each instrument having different min
 
 ---
 
-## 🤝 Contribution Guide
+## Contribution Guide
 
 1. Fork/Clone the repository.
 2. Create a new branch: `git checkout -b feature-branch`
@@ -97,10 +108,10 @@ While it looked easy on paper to implement, each instrument having different min
     ```
 
 ---
-📌 **Deployed Application:** [SI Calculator](https://si-risk-calculator.vercel.app/)
+**Deployed Application:** [SI Calculator](https://si-risk-calculator.vercel.app/)
 
 ---
 
-## 👥 Authors
+## Authors
 
 - Lionel Mwangi, [LinkedIn](https://www.linkedin.com/in/lionelmwangi/)
